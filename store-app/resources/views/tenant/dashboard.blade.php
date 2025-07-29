@@ -11,8 +11,7 @@
                     <h5 class="card-title">Products</h5>
                     <h2>{{ $stats['products'] ?? 0 }}</h2>
                     @if(isset($tenant) && $tenant)
-                        {{-- Temporarily comment out or remove the link --}}
-                        {{-- <a href="{{ route('tenant.products.index', ['subdomain' => $tenant->subdomain]) }}" class="text-white small">View all</a> --}}
+                     <a href="{{ route('tenant.products.index', ['subdomain' => $tenant->subdomain]) }}" class="text-white small">View all</a>
                     @endif
                 </div>
             </div>

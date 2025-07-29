@@ -42,15 +42,16 @@ Route::domain('{subdomain}.example.test')
         Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
         
         // Add these new resource routes
-        // Route::resource('products', \App\Http\Controllers\Tenant\ProductController::class)->names([
-        //     'index' => 'tenant.products.index',
-        //     'create' => 'tenant.products.create',
-        //     'store' => 'tenant.products.store',
-        //     'show' => 'tenant.products.show',
-        //     'edit' => 'tenant.products.edit',
-        //     'update' => 'tenant.products.update',
-        //     'destroy' => 'tenant.products.destroy'
-        // ]);
+    Route::resource('products', \App\Http\Controllers\Tenant\ProductController::class)->names([
+    'index' => 'tenant.products.index',
+    'create' => 'tenant.products.create',
+    'store' => 'tenant.products.store',
+    'show' => 'tenant.products.show',
+    'edit' => 'tenant.products.edit',
+    'update' => 'tenant.products.update',
+    'destroy' => 'tenant.products.destroy'
+]);
+
         
         // Route::resource('customers', \App\Http\Controllers\Tenant\CustomerController::class)->names([
         //     'index' => 'tenant.customers.index',
