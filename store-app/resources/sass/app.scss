@@ -1,0 +1,91 @@
+// 🎨 Light Theme with Dark Navbar/Header
+$primary: #0ea5e9; // Sky Blue
+$success: #10b981;
+$danger: #ef4444;
+$warning: #facc15;
+$info: #38bdf8;
+
+$body-bg: #f8fafc; // Light background
+$body-color: #1e293b; // Dark text
+
+$font-family-sans-serif: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+$border-radius: 0.6rem;
+$btn-border-radius: 0.5rem;
+$input-border-radius: 0.5rem;
+
+@import 'bootstrap/scss/bootstrap';
+
+// ✅ General Page Styling
+body {
+    font-size: 1.05rem;
+    font-weight: 400;
+    background-color: $body-bg;
+    color: $body-color;
+}
+
+// ✅ Dark Navbar Only
+.navbar {
+    background-color: #1e293b !important;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand,
+.nav-link {
+    color: #e2e8f0 !important;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: $primary !important;
+}
+
+// ✅ Card
+.card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+// ✅ Only Header of Card is Dark
+.card-header {
+    background-color: #1e293b;
+    color: #f8fafc;
+    font-weight: 600;
+    border-bottom: 1px solid #334155;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+// ✅ Buttons
+.btn-success {
+    background-color: #10b981;
+    border-color: #10b981;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background-color: #059669;
+    border-color: #047857;
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.25);
+    transform: translateY(-1px);
+}
+
+// ✅ Input Fields (Light Look)
+input.form-control,
+select.form-select {
+    background-color: #ffffff;
+    color: #1f2937;
+    border: 1px solid #cbd5e1;
+    transition: all 0.3s ease;
+}
+
+input.form-control:focus,
+select.form-select:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 0.2rem rgba(14, 165, 233, 0.2);
+}
