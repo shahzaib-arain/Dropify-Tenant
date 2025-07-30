@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Scope;
 
 class TenantScope implements Scope
 {
-    public function __construct(protected $tenantId) {}
+    protected $tenantId;
+
+    public function __construct($tenantId)
+    {
+        $this->tenantId = $tenantId;
+    }
 
     public function apply(Builder $builder, Model $model)
     {

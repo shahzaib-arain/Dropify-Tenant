@@ -23,10 +23,16 @@ public function register(): void
 
     /**
      * Bootstrap any application services.
-     */
+     */ 
     public function boot(): void
     {
-        
+         
+
+    Route::bind('product', function ($value) {
+        return \App\Models\Product::where('id', $value)
+            ->where('tenant_id', tenant()?->id)
+            ->firstOrFail();
+    });
     
     }
 }

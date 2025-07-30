@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Model
 {
+
     use HasFactory;
 
     protected $fillable = ['tenant_id', 'name', 'email'];
-
+    
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);
@@ -31,4 +32,6 @@ class Customer extends Model
     {
         return $this->hasMany(Cart::class);
     }
+
+    
 }

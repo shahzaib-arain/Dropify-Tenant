@@ -22,12 +22,30 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3 mb-3"><label>Price</label><input type="number" name="price" class="form-control" required></div>
-            <div class="col-md-3 mb-3"><label>Length</label><input type="number" name="length" class="form-control"></div>
-            <div class="col-md-3 mb-3"><label>Width</label><input type="number" name="width" class="form-control"></div>
-            <div class="col-md-3 mb-3"><label>Height</label><input type="number" name="height" class="form-control"></div>
-            <div class="col-md-3 mb-3"><label>Weight</label><input type="number" name="weight" class="form-control"></div>
-            <div class="col-md-3 mb-3"><label>Initial Quantity</label><input type="number" name="quantity" class="form-control" required></div>
+            <div class="col-md-3 mb-3">
+                <label>Price</label>
+                <input type="number" name="price" step="0.01" class="form-control" required>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label>Length (inches)</label>
+                <input type="number" name="length" step="0.01" class="form-control">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label>Width (inches)</label>
+                <input type="number" name="width" step="0.01" class="form-control">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label>Height (inches)</label>
+                <input type="number" name="height" step="0.01" class="form-control">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label>Weight (lbs)</label>
+                <input type="number" name="weight" step="0.01" class="form-control">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label>Initial Quantity</label>
+                <input type="number" name="quantity" class="form-control" min="0" required>
+            </div>
         </div>
 
         <button type="submit" class="btn btn-primary">Create Product</button>

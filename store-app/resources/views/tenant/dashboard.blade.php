@@ -17,15 +17,16 @@
             </div>
         </div>
         
-        <div class="col-md-4 mb-3">
-            <div class="card text-white bg-success">
-                <div class="card-body">
-                    <h5 class="card-title">Customers</h5>
-                    <h2>{{ $stats['customers'] ?? 0 }}</h2>
-                    {{-- Similar removal for customers --}}
-                </div>
-            </div>
+<div class="col-md-4 mb-3">
+    <div class="card text-white bg-success">
+        <div class="card-body">
+            <h5 class="card-title">Customers</h5>
+            <h2>{{ $stats['customers'] ?? 0 }}</h2>
+            <a href="{{ route('tenant.customers.index', ['subdomain' => $tenant->subdomain]) }}" 
+               class="text-white small">View all</a>
         </div>
+    </div>
+</div>
         
         <div class="col-md-4 mb-3">
             <div class="card text-white bg-info">

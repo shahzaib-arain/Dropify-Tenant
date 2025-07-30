@@ -35,6 +35,16 @@
                         <button class="btn btn-sm btn-danger">Delete</button>
                     </form>
                 </td>
+<td>
+    <form action="{{ route('tenant.cart.addItem', ['subdomain' => tenant('subdomain')]) }}" method="POST" class="d-flex">
+        @csrf
+        <input type="hidden" name="product_id" value="{{ $product->id }}">
+        <input type="number" name="quantity" value="1" min="1" max="{{ $product->inventory->quantity }}" class="form-control form-control-sm me-2" style="width: 60px;">
+        <button type="submit" class="btn btn-sm btn-primary">
+            <i class="fas fa-cart-plus"></i> Add
+        </button>
+    </form>
+</td>
             </tr>
             @empty
             <tr>

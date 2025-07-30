@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-4">
     <h2>Edit Product</h2>
-    <form method="POST" action="{{ route('tenant.products.update', ['product' => $product->id, 'subdomain' => tenant()->subdomain]) }}">
+    <form method="POST" action="{{ route('tenant.products.update', ['product' => $product, 'subdomain' => tenant()->subdomain]) }}">
         @csrf
         @method('PUT')
 

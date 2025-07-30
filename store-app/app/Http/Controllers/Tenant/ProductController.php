@@ -13,7 +13,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('inventory')
-            ->where('tenant_id', tenant()->id)
+            ->where('tenant_id', tenant()?->id)
             ->paginate(25);
 
         return view('tenant.products.index', compact('products'));
@@ -28,7 +28,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|max:255|unique:products,sku,NULL,id,tenant_id,' . tenant()->id,
+            'sku' => 'required|string|max:255|unique:products,sku,NULL,id,tenant_id,' . tenant()?->id,
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'length' => 'nullable|numeric',
@@ -39,7 +39,7 @@ class ProductController extends Controller
         ]);
 
         $product = Product::create([
-            'tenant_id' => tenant()->id,
+            'tenant_id' => tenant()?->id,
             'name' => $validated['name'],
             'sku' => $validated['sku'],
             'description' => $validated['description'] ?? null,
@@ -52,7 +52,7 @@ class ProductController extends Controller
 
         $product->inventory()->create([
             'quantity' => $validated['quantity'],
-            'tenant_id' => tenant()->id,
+            'tenant_id' => tenant()?->id,
         ]);
 
         return redirect()->route('tenant.products.index', ['subdomain' => tenant()->subdomain])
@@ -60,17 +60,17 @@ class ProductController extends Controller
     }
     public function edit(Product $product)
 {
-    abort_unless($product->tenant_id === tenant()->id, 403);
+    abort_unless($product->tenant_id === tenant()?->id, 403);
     return view('tenant.products.edit', compact('product'));
 }
 
 public function update(Request $request, Product $product)
 {
-    abort_unless($product->tenant_id === tenant()->id, 403);
+    abort_unless($product->tenant_id === tenant()?->id, 403);
 
     $validated = $request->validate([
         'name' => 'required|string|max:255',
-        'sku' => 'required|string|max:255|unique:products,sku,' . $product->id . ',id,tenant_id,' . tenant()->id,
+        'sku' => 'required|string|max:255|unique:products,sku,' . $product->id . ',id,tenant_id,' . tenant()?->id,
         'description' => 'nullable|string',
         'price' => 'required|numeric|min:0',
         'length' => 'nullable|numeric',
@@ -87,7 +87,7 @@ public function update(Request $request, Product $product)
 
 public function destroy(Product $product)
 {
-    abort_unless($product->tenant_id === tenant()->id, 403);
+    abort_unless($product->tenant_id === tenant()?->id, 403);
 
     $product->inventory()->delete();
     $product->delete();
