@@ -24,7 +24,7 @@ Route::get('/', function () {
 
 // Authenticated User Routes
 Route::middleware('auth')->group(function () {
-   Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
@@ -40,10 +40,11 @@ Route::domain('{subdomain}.example.test')
         \App\Http\Middleware\TenantScopeMiddleware::class
     ])
     ->group(function () {
+
         // Dashboard
         Route::get('/', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
-        Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
-        
+        Route::get('/dashboard', [TenantController::class, 'dashboard']);
+
         // Products
         Route::resource('products', ProductController::class)->names([
             'index' => 'tenant.products.index',
@@ -70,31 +71,32 @@ Route::domain('{subdomain}.example.test')
 
         // Customer Addresses (nested)
         Route::prefix('customers/{customer}')->group(function () {
-            Route::resource('addresses', AddressController::class)
-                ->names([
-                    'index' => 'tenant.addresses.index',
-                    'create' => 'tenant.addresses.create',
-                    'store' => 'tenant.addresses.store',
-                    'show' => 'tenant.addresses.show',
-                    'edit' => 'tenant.addresses.edit',
-                    'update' => 'tenant.addresses.update',
-                    'destroy' => 'tenant.addresses.destroy'
-                ]);
-        }); 
+            Route::resource('addresses', AddressController::class)->names([
+                'index' => 'tenant.addresses.index',
+                'create' => 'tenant.addresses.create',
+                'store' => 'tenant.addresses.store',
+                'show' => 'tenant.addresses.show',
+                'edit' => 'tenant.addresses.edit',
+                'update' => 'tenant.addresses.update',
+                'destroy' => 'tenant.addresses.destroy'
+            ]);
+        });
 
-        // Cart System (standalone, not nested)
-Route::prefix('cart')->group(function () {
-    Route::get('/', [CartController::class, 'index'])->name('tenant.cart.index');
-    Route::post('/add-item', [CartController::class, 'addItem'])->name('tenant.cart.addItem');
-    
-    // ✅ Explicitly bind the 'cart_item' param using the 'id'
-    Route::put('/{cart_item}', [CartController::class, 'update'])->whereNumber('cart_item')->name('tenant.cart.update');
-    Route::delete('/{cart_item}', [CartController::class, 'destroy'])->whereNumber('cart_item')->name('tenant.cart.destroy');
-});
+        // Cart System
+        Route::prefix('cart')->group(function () {
+            Route::get('/', [CartController::class, 'index'])->name('tenant.cart.index');
+            Route::post('/add-item', [CartController::class, 'addItem'])->name('tenant.cart.addItem');
+            Route::put('/{cart_item}', [CartController::class, 'update'])->whereNumber('cart_item')->name('tenant.cart.update');
+            Route::delete('/{cart_item}', [CartController::class, 'destroy'])->whereNumber('cart_item')->name('tenant.cart.destroy');
+            Route::get('/checkout', [CartController::class, 'checkout'])->name('tenant.cart.checkout');
+        });
 
+        // Switch Customer
+        Route::get('/switch-customer/{id}', [CustomerController::class, 'switchCustomer'])->name('customer.switch');
 
-         Route::get('/switch-customer/{id}', [CustomerController::class, 'switchCustomer'])
-    ->name('customer.switch');
-
-
+        // Orders
+        Route::get('orders', [OrderController::class, 'index'])->name('tenant.orders.index');
+        Route::get('orders/checkout', [OrderController::class, 'checkout'])->name('tenant.orders.checkout');
+        Route::post('orders', [OrderController::class, 'placeOrder'])->name('tenant.orders.store');
+        Route::get('orders/{order}', [OrderController::class, 'show'])->name('tenant.orders.show');
     });

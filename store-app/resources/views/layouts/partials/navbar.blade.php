@@ -34,13 +34,9 @@
                     @php
                         $customerId = session('active_customer_id');
                         $customer = $customerId ? \App\Models\Customer::find($customerId) : null;
-
-                        // Prevent error if carts() relation doesn't exist
                         $cartCount = ($customer && method_exists($customer, 'carts'))
                             ? optional($customer->carts()->open()->withCount('items')->first())->items_count
                             : 0;
-
-                        // Get all customers by tenant only (Option 2)
                         $allCustomers = \App\Models\Customer::where('tenant_id', tenant('id'))->get();
                     @endphp
 
@@ -51,6 +47,13 @@
                             @if($cartCount)
                                 <span class="badge bg-danger">{{ $cartCount }}</span>
                             @endif
+                        </a>
+                    </li>
+
+                    {{-- Orders --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('tenant.orders.index', ['subdomain' => tenant('subdomain')]) }}">
+                            <i class="fas fa-list"></i> Orders
                         </a>
                     </li>
 

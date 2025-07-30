@@ -88,9 +88,12 @@
                     </div>
                     
                     @if(!$cart->items->isEmpty())
-                        <a href="{{ route('tenant.checkout', ['subdomain' => tenant('subdomain')]) }}" class="btn btn-primary w-100 mt-3">
-                            Proceed to Checkout
-                        </a>
+                        <div class="d-grid gap-2 mt-3">
+                            <a href="{{ route('tenant.orders.checkout', ['subdomain' => tenant('subdomain')]) }}" 
+                               class="btn btn-primary btn-lg">
+                                Proceed to Checkout
+                            </a>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -98,3 +101,4 @@
     </div>
 </div>
 @endsection
+    

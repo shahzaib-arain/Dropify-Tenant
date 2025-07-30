@@ -7,7 +7,10 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
+use App\Models\Customer;
+use App\Models\Order;
+
 class TenantController extends Controller
 {
     public function index(Request $request)
@@ -86,22 +89,20 @@ class TenantController extends Controller
             ->with('success', 'Tenant deleted successfully!');
     }
 
-   public function dashboard()
+public function dashboard()
 {
-    $tenant = app('currentTenant');
-    $user = Auth::user();
+    $tenant = tenant();
     
     $stats = [
-        'products' => \App\Models\Product::count(),
-        'customers' => \App\Models\Customer::count(),
-        'orders' => \App\Models\Order::count(),
+        'products' => Product::count(),
+        'customers' => Customer::count(),
+        'orders' => Order::count(),
+        'recentOrders' => Order::with(['customer', 'items'])
+            ->latest()
+            ->take(5)
+            ->get()
     ];
 
-    return view('tenant.dashboard', [
-        'tenant' => $tenant,
-        'user' => $user,
-        'stats' => $stats,
-        'subdomain' => $tenant->subdomain // Add this
-    ]);
+    return view('tenant.dashboard', compact('tenant', 'stats'));
 }
 }

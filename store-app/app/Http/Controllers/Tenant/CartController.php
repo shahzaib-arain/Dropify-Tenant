@@ -107,4 +107,15 @@ class CartController extends Controller
             return $item->quantity * $item->unit_price;
         });
     }
+    public function checkout()
+{
+    $cart = $this->getOrCreateCart();
+    
+    if ($cart->isEmpty()) {
+        return redirect()->route('tenant.cart.index', ['subdomain' => tenant('subdomain')])
+            ->with('error', 'Your cart is empty');
+    }
+
+    return redirect()->route('tenant.orders.checkout', ['subdomain' => tenant('subdomain')]);
+}
 }
