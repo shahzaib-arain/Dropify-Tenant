@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mt-4">
     <h2>Add Product</h2>
-    <form method="POST" action="{{ route('tenant.products.store', ['subdomain' => tenant()->subdomain]) }}">
+    <form method="POST" action="{{ tenant_route('tenant.products.store') }}">
         @csrf
         <div class="row">
             <div class="col-md-6 mb-3">

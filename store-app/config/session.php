@@ -156,8 +156,7 @@ return [
     |
     */
 
-    'domain' => '.example.test',
-
+    'domain' => env('SESSION_DOMAIN', '.example.test'),
 
     /*
     |--------------------------------------------------------------------------

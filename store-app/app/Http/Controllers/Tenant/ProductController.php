@@ -58,15 +58,20 @@ class ProductController extends Controller
         return redirect()->route('tenant.products.index', ['subdomain' => tenant()->subdomain])
             ->with('success', 'Product created successfully');
     }
-    public function edit(Product $product)
+public function edit($subdomain,$id)
 {
-    abort_unless($product->tenant_id === tenant()?->id, 403);
+   
+    $product = Product::where('id', $id)
+        ->where('tenant_id', tenant()?->id)
+        ->firstOrFail();
+
     return view('tenant.products.edit', compact('product'));
 }
-
-public function update(Request $request, Product $product)
+public function update(Request $request, $subdomain, $id)
 {
-    abort_unless($product->tenant_id === tenant()?->id, 403);
+    $product = Product::where('id', $id)
+        ->where('tenant_id', tenant()?->id)
+        ->firstOrFail();
 
     $validated = $request->validate([
         'name' => 'required|string|max:255',
@@ -85,9 +90,11 @@ public function update(Request $request, Product $product)
         ->with('success', 'Product updated successfully');
 }
 
-public function destroy(Product $product)
-{
-    abort_unless($product->tenant_id === tenant()?->id, 403);
+public function destroy($subdomain, $id)
+{  
+    $product = Product::where('id', $id)
+        ->where('tenant_id', tenant()?->id)
+        ->firstOrFail();
 
     $product->inventory()->delete();
     $product->delete();

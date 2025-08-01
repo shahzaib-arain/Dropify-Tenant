@@ -13,6 +13,8 @@ use App\Models\Order;
 use App\Scopes\TenantScope;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\ShippingMethod;
+use App\Models\ShippingRate;
 
 class TenantScopeMiddleware
 {
@@ -51,17 +53,20 @@ View::share([
         Order::addGlobalScope(new TenantScope($tenant->id));
         
 
-        Cart::withoutGlobalScopes();
-CartItem::withoutGlobalScopes();
 
-// Apply fresh tenant scopes
-Cart::addGlobalScope(new TenantScope($tenant->id));
-CartItem::addGlobalScope(new TenantScope($tenant->id));
+        ShippingMethod::withoutGlobalScopes();
+ShippingRate::withoutGlobalScopes();
+
+ShippingMethod::addGlobalScope(new TenantScope($tenant->id));
+ShippingRate::addGlobalScope(new TenantScope($tenant->id));
         // Verify user has access to this tenant
         if (Auth::check() && Auth::user()->tenant_id !== $tenant->id) {
             abort(403, 'Unauthorized tenant access.');
         }
 
         return $next($request);
+
+
+
     }
 }   

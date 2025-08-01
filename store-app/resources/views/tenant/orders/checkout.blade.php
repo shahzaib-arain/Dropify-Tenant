@@ -23,27 +23,64 @@
                             </div>
                         </div>
                         
+                        {{-- Updated Billing & Shipping Address Block --}}
                         <div class="row">
+                            {{-- Billing Address --}}
                             <div class="col-md-6 mb-3">
                                 <label for="billing_address_id" class="form-label">Billing Address</label>
                                 <select class="form-select" id="billing_address_id" name="billing_address_id" required>
-                                    @foreach($addresses as $address)
+                                    @forelse($addresses ?? [] as $address)
                                         <option value="{{ $address->id }}">
                                             {{ $address->line1 }}, {{ $address->city }} ({{ $address->type }})
                                         </option>
-                                    @endforeach
+                                    @empty
+                                        <option value="" disabled>No addresses found. Please add an address first.</option>
+                                    @endforelse
                                 </select>
+                                
+                                @if(($addresses ?? collect())->isEmpty())
+                                    <div class="text-danger small mt-1">
+                                        @if(!empty($customer))
+                                            <a href="{{ route('tenant.customers.addresses.create', [
+                                                'subdomain' => tenant('subdomain'),
+                                                'customer' => $customer->id
+                                            ]) }}">
+                                                Add a billing address
+                                            </a>
+                                        @else
+                                            <span class="text-danger">No customer profile found</span>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                             
+                            {{-- Shipping Address --}}
                             <div class="col-md-6 mb-3">
                                 <label for="shipping_address_id" class="form-label">Shipping Address</label>
                                 <select class="form-select" id="shipping_address_id" name="shipping_address_id" required>
-                                    @foreach($addresses as $address)
+                                    @forelse($addresses ?? [] as $address)
                                         <option value="{{ $address->id }}">
                                             {{ $address->line1 }}, {{ $address->city }} ({{ $address->type }})
                                         </option>
-                                    @endforeach
+                                    @empty
+                                        <option value="" disabled>No addresses found. Please add an address first.</option>
+                                    @endforelse
                                 </select>
+                                
+                                @if(($addresses ?? collect())->isEmpty())
+                                    <div class="text-danger small mt-1">
+                                        @if(!empty($customer))
+                                            <a href="{{ route('tenant.customers.addresses.create', [
+                                                'subdomain' => tenant('subdomain'),
+                                                'customer' => $customer->id
+                                            ]) }}">
+                                                Add a shipping address
+                                            </a>
+                                        @else
+                                            <span class="text-danger">No customer profile found</span>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         
@@ -53,6 +90,7 @@
             </div>
         </div>
         
+        {{-- Order Summary --}}
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header bg-dark text-white">
@@ -75,7 +113,7 @@
                     </div>
                     <div class="d-flex justify-content-between fw-bold">
                         <span>Shipping:</span>
-                        <span>$0.00</span> <!-- Will be updated in shipping module -->
+                        <span>$0.00</span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between fw-bold fs-5">

@@ -30,7 +30,6 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div class="me-3">
-                                                        <!-- Product image placeholder -->
                                                         <div class="bg-light" style="width: 60px; height: 60px;"></div>
                                                     </div>
                                                     <div>
@@ -41,21 +40,31 @@
                                             </td>
                                             <td>${{ number_format($item->unit_price, 2) }}</td>
                                             <td>
-                                                <form action="{{ route('tenant.cart.update', ['subdomain' => tenant('subdomain'), 'cart_item' => $item->id]) }}" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" style="width: 60px;" class="form-control form-control-sm">
-                                                </form>
+                                              <form action="{{ tenant_route('tenant.cart.update', [
+    'subdomain' => tenant()->subdomain,
+    'id' => $item->id
+]) }}" method="POST">
+    @csrf
+    @method('PUT')
+    <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" style="width: 60px;" 
+        class="form-control form-control-sm" 
+        onchange="this.form.submit()">
+</form>
+
                                             </td>
                                             <td>${{ number_format($item->unit_price * $item->quantity, 2) }}</td>
                                             <td>
-                                                <form action="{{ route('tenant.cart.destroy', ['subdomain' => tenant('subdomain'), 'cart_item' => $item->id]) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                          <form action="{{ tenant_route('tenant.cart.destroy', [
+    'subdomain' => tenant()->subdomain,
+    'id' => $item->id
+]) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-sm btn-danger">
+        <i class="fas fa-trash"></i>
+    </button>
+</form>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -89,8 +98,9 @@
                     
                     @if(!$cart->items->isEmpty())
                         <div class="d-grid gap-2 mt-3">
-                            <a href="{{ route('tenant.orders.checkout', ['subdomain' => tenant('subdomain')]) }}" 
-                               class="btn btn-primary btn-lg">
+                           <a href="{{ tenant_route('tenant.orders.checkout', [
+                                'subdomain' => tenant()->subdomain
+                           ]) }}" class="btn btn-primary btn-lg">
                                 Proceed to Checkout
                             </a>
                         </div>
@@ -101,4 +111,3 @@
     </div>
 </div>
 @endsection
-    

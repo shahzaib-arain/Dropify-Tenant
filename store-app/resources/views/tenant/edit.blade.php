@@ -1,34 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h2 class="h4 mb-0">Edit Tenant</h2>
-        </div>
+<div class="container py-4">
+    <h2 class="mb-4">Edit Rates for {{ $method->name }}</h2>
+    
+    <div class="card">
         <div class="card-body">
-            <form method="POST" action="{{ route('tenants.update', $tenant->id) }}">
+            <form action="{{ route('tenant.shipping-rates.update', [
+                'subdomain' => tenant('subdomain'),
+                'shipping_method' => $method->id,
+                'rate' => $rate->id
+            ]) }}" method="POST">
                 @csrf
                 @method('PUT')
-
-                <div class="mb-3">
-                    <label class="form-label">Company Name</label>
-                    <input type="text" class="form-control" name="name" value="{{ $tenant->name }}" required>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label">Subdomain</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="subdomain" value="{{ $tenant->subdomain }}" required>
-                        <span class="input-group-text">.example.test</span>
+                
+                <!-- Same form fields as create.blade.php but with old() values -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="base_cost" class="form-label">Base Cost ($)</label>
+                        <input type="number" step="0.01" class="form-control" id="base_cost" 
+                               name="base_cost" value="{{ old('base_cost', $rate->base_cost) }}" required min="0">
                     </div>
+                    
+                    <!-- Include all other fields similarly -->
                 </div>
-
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save me-1"></i> Update
-                    </button>
-                </div>
+                
+                <button type="submit" class="btn btn-primary">Update Rates</button>
+                <a href="{{ route('tenant.shipping-methods.show', [
+                    'subdomain' => tenant('subdomain'),
+                    'shipping_method' => $method->id
+                ]) }}" class="btn btn-outline-secondary">Cancel</a>
             </form>
         </div>
     </div>

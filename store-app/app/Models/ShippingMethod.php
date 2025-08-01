@@ -18,9 +18,9 @@ class ShippingMethod extends Model
     }
 
     public function rate()
-    {
-        return $this->hasOne(ShippingRate::class);
-    }
+{
+    return $this->hasOne(ShippingRate::class);
+}
 
     public function shippingLogs()
     {

@@ -7,11 +7,10 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Customer;
-
+use Illuminate\Support\Facades\Log;
 class RouteServiceProvider extends ServiceProvider
 {
-   
-    public const HOME = 'tenant.dashboard'; 
+    public const HOME = '/';
 
     public function register(): void
     {
@@ -21,7 +20,7 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         parent::boot();
-
+        
         Route::bind('product', function ($value) {
             return Product::where('id', $value)
                 ->where('tenant_id', tenant()?->id)
@@ -34,15 +33,36 @@ class RouteServiceProvider extends ServiceProvider
                 ->firstOrFail();
         });
 
-        
 Route::bind('cart_item', function ($value) {
-    return \App\Models\CartItem::where('id', $value)
+    Log::debug('Binding cart_item', [
+        'value' => $value,
+        'tenant_id' => tenant()?->id,
+        'auth_id' => Auth::id()
+    ]);
+    
+    $item = \App\Models\CartItem::where('id', $value)
         ->whereHas('cart', function ($query) {
             $query->where('tenant_id', tenant()?->id)
                   ->where('customer_id', Auth::id());
         })
         ->firstOrFail();
+        
+    Log::debug('Found cart_item', ['item' => $item]);
+    return $item;
 });
 
+
+     // In RouteServiceProvider.php
+Route::bind('shipping_method', function ($value) {
+    $tenantId = tenant('id');
+    
+    if (!$tenantId) {
+        abort(403, 'No tenant identified');
+    }
+
+    return \App\Models\ShippingMethod::where('id', $value)
+        ->where('tenant_id', $tenantId)
+        ->firstOrFail();
+});
     }
 }

@@ -22,20 +22,25 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-public function store(LoginRequest $request): RedirectResponse
-{
-    $request->authenticate(); // ensure this is called first
-    $request->session()->regenerate();
+    public function store(LoginRequest $request): RedirectResponse
+    {
+        $request->authenticate();
+        $request->session()->regenerate();
 
-    $user = $request->user(); // now this will not be null
-    $subdomain = $user->tenant->subdomain ?? null; // avoid null exception
+        $user = $request->user();
+        
+        if (isSuperAdmin()) {
+            return redirect()->away('http://admin.example.test:8000');
+        }
 
-    if (!$subdomain) {
-        abort(403, 'No tenant associated with this user.');
+        $subdomain = $user->tenant->subdomain ?? null;
+
+        if (!$subdomain) {
+            abort(403, 'No tenant associated with this user.');
+        }
+
+       return redirect()->away("http://{$subdomain}.example.test:8000/dashboard");
     }
-
-    return redirect()->route('tenant.dashboard', ['subdomain' => $subdomain]);
-}
 
     /**
      * Destroy an authenticated session.

@@ -8,6 +8,7 @@ use App\Http\Controllers\Tenant\OrderController;
 use App\Http\Controllers\Tenant\CartController;
 use App\Http\Controllers\Tenant\AddressController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 // Super Admin Routes (admin.example.test)
 Route::domain('admin.example.test')
@@ -19,6 +20,16 @@ Route::domain('admin.example.test')
 
 // Public Routes
 Route::get('/', function () {
+    if (Auth::check() && isTenantAdmin()) {
+        return redirect()->route('tenant.dashboard', [
+            'subdomain' => tenant('subdomain')
+        ]);
+    }
+
+    if (Auth::check() && isSuperAdmin()) {
+        return redirect()->away('http://admin.example.test:8000');
+    }
+
     return view('welcome');
 });
 
@@ -45,16 +56,15 @@ Route::domain('{subdomain}.example.test')
         Route::get('/', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
         Route::get('/dashboard', [TenantController::class, 'dashboard']);
 
-        // Products
-        Route::resource('products', ProductController::class)->names([
-            'index' => 'tenant.products.index',
-            'create' => 'tenant.products.create',
-            'store' => 'tenant.products.store',
-            'show' => 'tenant.products.show',
-            'edit' => 'tenant.products.edit',
-            'update' => 'tenant.products.update',
-            'destroy' => 'tenant.products.destroy'
-        ]);
+        // Products (Custom routes without model binding)
+        Route::prefix('products')->group(function () {
+            Route::get('/', [ProductController::class, 'index'])->name('tenant.products.index');
+            Route::get('/create', [ProductController::class, 'create'])->name('tenant.products.create');
+            Route::post('/', [ProductController::class, 'store'])->name('tenant.products.store');
+            Route::get('/{id}/edit', [ProductController::class, 'edit'])->name('tenant.products.edit');
+            Route::put('/{id}', [ProductController::class, 'update'])->name('tenant.products.update');
+            Route::delete('/{id}', [ProductController::class, 'destroy'])->name('tenant.products.destroy');
+        });
 
         // Customers
         Route::resource('customers', CustomerController::class)
@@ -83,13 +93,17 @@ Route::domain('{subdomain}.example.test')
         });
 
         // Cart System
-        Route::prefix('cart')->group(function () {
-            Route::get('/', [CartController::class, 'index'])->name('tenant.cart.index');
-            Route::post('/add-item', [CartController::class, 'addItem'])->name('tenant.cart.addItem');
-            Route::put('/{cart_item}', [CartController::class, 'update'])->whereNumber('cart_item')->name('tenant.cart.update');
-            Route::delete('/{cart_item}', [CartController::class, 'destroy'])->whereNumber('cart_item')->name('tenant.cart.destroy');
-            Route::get('/checkout', [CartController::class, 'checkout'])->name('tenant.cart.checkout');
-        });
+     // Cart (Custom routes without model binding, like products)
+Route::prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('tenant.cart.index'); // View cart
+    Route::get('/create', [CartController::class, 'create'])->name('tenant.cart.create'); // Optional - Add item page
+    Route::post('/', [CartController::class, 'addItem'])->name('tenant.cart.store'); // Add to cart
+    Route::get('/{id}/edit', [CartController::class, 'edit'])->name('tenant.cart.edit'); // Edit cart item
+    Route::put('/{id}', [CartController::class, 'update'])->name('tenant.cart.update'); // Update cart item
+    Route::delete('/{id}', [CartController::class, 'destroy'])->name('tenant.cart.destroy'); // Remove from cart
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('tenant.cart.checkout'); // Checkout page
+});
+
 
         // Switch Customer
         Route::get('/switch-customer/{id}', [CustomerController::class, 'switchCustomer'])->name('customer.switch');
@@ -99,4 +113,28 @@ Route::domain('{subdomain}.example.test')
         Route::get('orders/checkout', [OrderController::class, 'checkout'])->name('tenant.orders.checkout');
         Route::post('orders', [OrderController::class, 'placeOrder'])->name('tenant.orders.store');
         Route::get('orders/{order}', [OrderController::class, 'show'])->name('tenant.orders.show');
+
+        // Shipping Methods
+        Route::resource('shipping-methods', \App\Http\Controllers\Tenant\ShippingMethodController::class)->names([
+            'index' => 'tenant.shipping-methods.index',
+            'create' => 'tenant.shipping-methods.create',
+            'store' => 'tenant.shipping-methods.store',
+            'show' => 'tenant.shipping-methods.show',
+            'edit' => 'tenant.shipping-methods.edit',
+            'update' => 'tenant.shipping-methods.update',
+            'destroy' => 'tenant.shipping-methods.destroy'
+        ]);
+
+        // Nested Rates
+        Route::prefix('shipping-methods/{shipping_method}')->group(function () {
+            Route::resource('rates', \App\Http\Controllers\Tenant\ShippingRateController::class)->names([
+                'index' => 'tenant.shipping-rates.index',
+                'create' => 'tenant.shipping-rates.create',
+                'store' => 'tenant.shipping-rates.store',
+                'show' => 'tenant.shipping-rates.show',
+                'edit' => 'tenant.shipping-rates.edit',
+                'update' => 'tenant.shipping-rates.update',
+                'destroy' => 'tenant.shipping-rates.destroy'
+            ]);
+        });
     });
