@@ -4,9 +4,17 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Customers</h1>
+<<<<<<< HEAD
         <a href="{{ tenant_route('tenant.customers.create', ['subdomain' => tenant()->subdomain]) }}" class="btn btn-success">
             Add Customer
         </a>
+=======
+      <a href="{{ route('tenant.customers.create', ['subdomain' => request()->route('subdomain') ?? tenant()->subdomain]) }}"
+   class="btn btn-success">
+   Add Customer
+</a>
+
+>>>>>>> a9176ecda47fd623069b9d3516d19a4bcb2e89e4
     </div>
 
     <div class="card shadow-sm">
@@ -66,13 +74,21 @@
                         </tbody>
                     </table>
                 </div>
+<<<<<<< HEAD
 
                 <!-- Pagination -->
                 <div class="mt-3">
                     {{ $customers->links() }}
                 </div>
+=======
+                {{ $customers->links() }}
+>>>>>>> a9176ecda47fd623069b9d3516d19a4bcb2e89e4
             @endif
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 @endsection
+=======
+@endsection
+>>>>>>> a9176ecda47fd623069b9d3516d19a4bcb2e89e4
